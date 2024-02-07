@@ -8,15 +8,32 @@ import cors from 'cors';
 const app = express();
 const httpServer = http.createServer(app);
 
+var currentMessage = 'Hello from the backend';
+
 const typeDefs = `#gql
   type Query {
     hello: String
+  }
+  type Message {
+    message: String
+  }  
+  type Mutation {
+    updateMessage(message: String!): Message!
   }
 `;
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello from the backend',
+    hello: () => currentMessage,
+  },
+  Mutation: {
+    updateMessage: (_, { message }) => {
+      console.log('message', message);
+      currentMessage = message;
+      return {
+        message: currentMessage,
+      };
+    },
   },
 };
 
